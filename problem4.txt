@@ -1,0 +1,232 @@
+Please enter a MongoDB connection string (Default: mongodb://localhost/):
+
+Current Mongosh Log ID: 6545534876e15703739a59b1
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.2
+Using MongoDB:          7.0.2
+Using Mongosh:          2.0.2
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2023-11-04T00:48:36.698+05:30: Access control is not enabledfor the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use problem4
+switched to db problem4
+Please enter a MongoDB connection string (Default: mongodb://locproblem4> db.createCollection("teachers");
+{ ok: 1 }
+problem4> db.createCollection("students");
+{ ok: 1 }
+problem4> db.teachers.insertMany([
+...     { Tname: "John", dno: 1, dname: "Computer", experience:5, salary: 12000, date_of_joining: "2020-01-15" },
+...     { Tname: "Alice", dno: 2, dname: "IT", experience: 8, sasalary: 15000, date_of_joining: "2018-05-20" },
+...     { Tname: "Bob", dno: 3, dname: "E&TC", experience: 3, sasalary: 9000, date_of_joining: "2021-09-10" },
+...     { Tname: "Praveen", dno: 2, dname: "IT", experience: 6,salary: 11000, date_of_joining: "2019-11-30" }
+... ]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("6545537d76e15703739a59b2"),
+    '1': ObjectId("6545537d76e15703739a59b3"),
+    '2': ObjectId("6545537d76e15703739a59b4"),
+    '3': ObjectId("6545537d76e15703739a59b5")
+  }
+}
+problem4> db.students.insertMany([
+...     { Sname: "Alice", roll_no: 1, class: "10th" },
+...     { Sname: "Bob", roll_no: 2, class: "11th" },
+...     { Sname: "XYZ", roll_no: 3, class: "12th" }
+... ]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("6545538976e15703739a59b6"),
+    '1': ObjectId("6545538976e15703739a59b7"),
+    '2': ObjectId("6545538976e15703739a59b8")
+  }
+}
+problem4> db.teachers.find().sort({ Tname: 1 });
+[
+  {
+    _id: ObjectId("6545537d76e15703739a59b3"),
+    Tname: 'Alice',
+    dno: 2,
+    dname: 'IT',
+    experience: 8,
+    salary: 15000,
+    date_of_joining: '2018-05-20'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b4"),
+    Tname: 'Bob',
+    dno: 3,
+    dname: 'E&TC',
+    experience: 3,
+    salary: 9000,
+    date_of_joining: '2021-09-10'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b2"),
+    Tname: 'John',
+    dno: 1,
+    dname: 'Computer',
+    experience: 5,
+    salary: 12000,
+    date_of_joining: '2020-01-15'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b5"),
+    Tname: 'Praveen',
+    dno: 2,
+    dname: 'IT',
+    experience: 6,
+    salary: 11000,
+    date_of_joining: '2019-11-30'
+  }
+]
+problem4> db.teachers.find({ dname: "Computer" });
+[
+  {
+    _id: ObjectId("6545537d76e15703739a59b2"),
+    Tname: 'John',
+    dno: 1,
+    dname: 'Computer',
+    experience: 5,
+    salary: 12000,
+    date_of_joining: '2020-01-15'
+  }
+]
+problem4> db.teachers.find({ dname: { $in: ["Computer", "IT", "E&TC"] } });
+[
+  {
+    _id: ObjectId("6545537d76e15703739a59b2"),
+    Tname: 'John',
+    dno: 1,
+    dname: 'Computer',
+    experience: 5,
+    salary: 12000,
+    date_of_joining: '2020-01-15'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b3"),
+    Tname: 'Alice',
+    dno: 2,
+    dname: 'IT',
+    experience: 8,
+    salary: 15000,
+    date_of_joining: '2018-05-20'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b4"),
+    Tname: 'Bob',
+    dno: 3,
+    dname: 'E&TC',
+    experience: 3,
+    salary: 9000,
+    date_of_joining: '2021-09-10'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b5"),
+    Tname: 'Praveen',
+    dno: 2,
+    dname: 'IT',
+    experience: 6,
+    salary: 11000,
+    date_of_joining: '2019-11-30'
+  }
+]
+problem4> db.teachers.find({ dname: { $in: ["Computer", "IT", "E&TC"] }, salary: { $gte: 10000 } });
+[
+  {
+    _id: ObjectId("6545537d76e15703739a59b2"),
+    Tname: 'John',
+    dno: 1,
+    dname: 'Computer',
+    experience: 5,
+    salary: 12000,
+    date_of_joining: '2020-01-15'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b3"),
+    Tname: 'Alice',
+    dno: 2,
+    dname: 'IT',
+    experience: 8,
+    salary: 15000,
+    date_of_joining: '2018-05-20'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b5"),
+    Tname: 'Praveen',
+    dno: 2,
+    dname: 'IT',
+    experience: 6,
+    salary: 11000,
+    date_of_joining: '2019-11-30'
+  }
+]
+problem4> db.students.find({ $or: [{ roll_no: 2 }, { Sname: "xyz" }] });
+[
+  {
+    _id: ObjectId("6545538976e15703739a59b7"),
+    Sname: 'Bob',
+    roll_no: 2,
+    class: '11th'
+  }
+]
+problem4> db.teachers.updateOne({ Tname: "Praveen" }, { $set: {experience: 10 } }, { upsert: true });
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+problem4> db.teachers.updateMany({ dname: "IT" }, { $set: { dnamdname: "COMP" } });
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+problem4> db.teachers.find({}, { Tname: 1, experience: 1, _id: 0 });
+[
+  { Tname: 'John', experience: 5 },
+  { Tname: 'Alice', experience: 8 },
+  { Tname: 'Bob', experience: 3 },
+  { Tname: 'Praveen', experience: 10 }
+]
+problem4> db.teachers.deleteMany({ dname: "IT" });
+{ acknowledged: true, deletedCount: 0 }
+problem4> db.teachers.find().sort({ _id: 1 }).limit(3).pretty();
+[
+  {
+    _id: ObjectId("6545537d76e15703739a59b2"),
+    Tname: 'John',
+    dno: 1,
+    dname: 'Computer',
+    experience: 5,
+    salary: 12000,
+    date_of_joining: '2020-01-15'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b3"),
+    Tname: 'Alice',
+    dno: 2,
+    dname: 'COMP',
+    experience: 8,
+    salary: 15000,
+    date_of_joining: '2018-05-20'
+  },
+  {
+    _id: ObjectId("6545537d76e15703739a59b4"),
+    Tname: 'Bob',
+    dno: 3,
+    dname: 'E&TC',
+    experience: 3,
+    salary: 9000,
+    date_of_joining: '2021-09-10'
+  }
+Please enter a MongoDB connection string (Default: mongodb://locproblem4>

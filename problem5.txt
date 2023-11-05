@@ -1,0 +1,238 @@
+Please enter a MongoDB connection string (Default: mongodb://localhost/):
+
+Current Mongosh Log ID: 65455742082629ac680ceeb1
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.2
+Using MongoDB:          7.0.2
+Using Mongosh:          2.0.2
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2023-11-04T00:48:36.698+05:30: Access control is not enabledfor the database. Read and write access to data and configuration is unrestricted
+------
+test> use problem5
+switched to db problem5
+Please enter a MongoDB connection string (Default: mongodb://locproblem5> db.createCollection("books");
+{ ok: 1 }
+problem5> db.books.insertMany([
+...   { title: "Book 1", author: "Author 1", genre: "Fiction", price: 20, published_date: new Date("2022-01-01") },
+...   { title: "Book 2", author: "Author 2", genre: "Non-Fiction", price: 25, published_date: new Date("2021-05-15") },
+...   { title: "Book 3", author: "Author 1", genre: "Mystery", price: 30, published_date: new Date("2020-09-30") },
+...   { title: "Book 4", author: "Author 3", genre: "Sci-Fi", pr
+ice: 22, published_date: new Date("2022-03-20") },
+...   { title: "Book 5", author: "Author 2", genre: "Fiction", price: 18, published_date: new Date("2023-02-10") }
+... ]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("65455776082629ac680ceeb2"),
+    '1': ObjectId("65455776082629ac680ceeb3"),
+    '2': ObjectId("65455776082629ac680ceeb4"),
+    '3': ObjectId("65455776082629ac680ceeb5"),
+    '4': ObjectId("65455776082629ac680ceeb6")
+  }
+}
+problem5> db.books.aggregate([
+...   {
+...     $group: {
+...       _id: null,
+...       averagePrice: { $avg: "$price" }
+...     }
+...   }
+... ]);
+[ { _id: null, averagePrice: 23 } ]
+problem5> db.books.aggregate([
+...   {
+...     $group: {
+...       _id: "$genre",
+...       bookCount: { $sum: 1 }
+...     }
+...   }
+... ]);
+[
+  { _id: 'Fiction', bookCount: 2 },
+  { _id: 'Non-Fiction', bookCount: 1 },
+  { _id: 'Mystery', bookCount: 1 },
+  { _id: 'Sci-Fi', bookCount: 1 }
+]
+problem5> db.books.aggregate([
+...   {
+...     $group: {
+...       _id: "$genre",
+...       maxPrice: { $max: "$price" },
+...       bookDetails: { $first: "$$ROOT" }
+...     }
+...   }
+... ]);
+[
+  {
+    _id: 'Fiction',
+    maxPrice: 20,
+    bookDetails: {
+      _id: ObjectId("65455776082629ac680ceeb2"),
+      title: 'Book 1',
+      author: 'Author 1',
+      genre: 'Fiction',
+      price: 20,
+      published_date: ISODate("2022-01-01T00:00:00.000Z")
+    }
+  },
+  {
+    _id: 'Non-Fiction',
+    maxPrice: 25,
+    bookDetails: {
+      _id: ObjectId("65455776082629ac680ceeb3"),
+      title: 'Book 2',
+      author: 'Author 2',
+      genre: 'Non-Fiction',
+      price: 25,
+      published_date: ISODate("2021-05-15T00:00:00.000Z")
+    }
+  },
+  {
+    _id: 'Mystery',
+    maxPrice: 30,
+    bookDetails: {
+      _id: ObjectId("65455776082629ac680ceeb4"),
+      title: 'Book 3',
+      author: 'Author 1',
+      genre: 'Mystery',
+      price: 30,
+      published_date: ISODate("2020-09-30T00:00:00.000Z")
+    }
+  },
+  {
+    _id: 'Sci-Fi',
+    maxPrice: 22,
+    bookDetails: {
+      _id: ObjectId("65455776082629ac680ceeb5"),
+      title: 'Book 4',
+      author: 'Author 3',
+      genre: 'Sci-Fi',
+      price: 22,
+      published_date: ISODate("2022-03-20T00:00:00.000Z")
+    }
+  }
+]
+problem5> db.books.aggregate([
+...   {
+...     $group: {
+...       _id: "$author",
+...       bookCount: { $sum: 1 }
+...     }
+...   },
+...   {
+...     $sort: { bookCount: -1 }
+...   },
+...   {
+...     $limit: 1
+...   }
+... ]);
+[ { _id: 'Author 1', bookCount: 2 } ]
+problem5> db.books.aggregate([
+...   {
+...     $sort: { published_date: -1 }
+...   }
+... ]);
+[
+  {
+    _id: ObjectId("65455776082629ac680ceeb6"),
+    title: 'Book 5',
+    author: 'Author 2',
+    genre: 'Fiction',
+    price: 18,
+    published_date: ISODate("2023-02-10T00:00:00.000Z")
+  },
+  {
+    _id: ObjectId("65455776082629ac680ceeb5"),
+    title: 'Book 4',
+    author: 'Author 3',
+    genre: 'Sci-Fi',
+    price: 22,
+    published_date: ISODate("2022-03-20T00:00:00.000Z")
+  },
+  {
+    _id: ObjectId("65455776082629ac680ceeb2"),
+    title: 'Book 1',
+    author: 'Author 1',
+    genre: 'Fiction',
+    price: 20,
+    published_date: ISODate("2022-01-01T00:00:00.000Z")
+  },
+  {
+    _id: ObjectId("65455776082629ac680ceeb3"),
+    title: 'Book 2',
+    author: 'Author 2',
+    genre: 'Non-Fiction',
+    price: 25,
+    published_date: ISODate("2021-05-15T00:00:00.000Z")
+  },
+  {
+    _id: ObjectId("65455776082629ac680ceeb4"),
+    title: 'Book 3',
+    author: 'Author 1',
+    genre: 'Mystery',
+    price: 30,
+    published_date: ISODate("2020-09-30T00:00:00.000Z")
+  }
+]
+problem5>
+
+problem5> // 6. Sort the price in ascending order.
+
+problem5> db.books.aggregate([
+...   {
+...     $sort: { price: 1 }
+...   }
+... ]);
+[
+  {
+    _id: ObjectId("65455776082629ac680ceeb6"),
+    title: 'Book 5',
+    author: 'Author 2',
+    genre: 'Fiction',
+    price: 18,
+    published_date: ISODate("2023-02-10T00:00:00.000Z")
+  },
+  {
+    _id: ObjectId("65455776082629ac680ceeb2"),
+    title: 'Book 1',
+    author: 'Author 1',
+    genre: 'Fiction',
+    price: 20,
+    published_date: ISODate("2022-01-01T00:00:00.000Z")
+  },
+  {
+    _id: ObjectId("65455776082629ac680ceeb5"),
+    title: 'Book 4',
+    author: 'Author 3',
+    genre: 'Sci-Fi',
+    price: 22,
+    published_date: ISODate("2022-03-20T00:00:00.000Z")
+  },
+  {
+    _id: ObjectId("65455776082629ac680ceeb3"),
+    title: 'Book 2',
+    author: 'Author 2',
+    genre: 'Non-Fiction',
+    price: 25,
+    published_date: ISODate("2021-05-15T00:00:00.000Z")
+  },
+  {
+    _id: ObjectId("65455776082629ac680ceeb4"),
+    title: 'Book 3',
+    author: 'Author 1',
+    genre: 'Mystery',
+    price: 30,
+    published_date: ISODate("2020-09-30T00:00:00.000Z")
+  }
+]
+problem5> db.books.createIndex({ title: 1 });
+title_1
+problem5> db.books.getIndexes();
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { title: 1 }, name: 'title_1' }
+]
+problem5>
