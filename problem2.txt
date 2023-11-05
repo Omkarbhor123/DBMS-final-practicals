@@ -1,0 +1,62 @@
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 14
+Server version: 8.0.34 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database problem2;
+Query OK, 1 row affected (0.07 sec)
+
+mysql> use problem2;
+Database changed
+mysql> CREATE TABLE Stud_Marks ( RollNo INT NOT NULL AUTO_INCREMENT, Name VARCHAR(255) NOT NULL, Total_Marks INT NOT NULL, PRIMARY KEY (RollNo));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> CREATE TABLE Result ( RollNo INT NOT NULL AUTO_INCREMENT, Name VARCHAR(255) NOT NULL,Class VARCHAR(255) NOT NULL,PRIMARYKEY (RollNo));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> INSERT INTO Stud_Marks (Name, Total_Marks) VALUES('omkarbhor', 1400),( 'yash khedkar', 1300),('ritesh jalkote', 1200),('pratik datir',500);
+Query OK, 4 rows affected (0.07 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> delimiter //
+mysql> CREATE PROCEDURE Grade()
+    ->    BEGIN
+    ->    INSERT INTO Result (Name, Class)
+    ->    SELECT
+    ->    Name,
+    ->    CASE
+    ->    WHEN Total_Marks>= 900 AND Total_Marks<= 1500 THEN 'Distinction'
+    ->    WHEN Total_Marks>= 890 AND Total_Marks<= 989 THEN 'First Class'
+    ->    WHEN Total_Marks>= 825 AND Total_Marks<= 899 THEN 'Higher Second Class'
+    ->   ELSE 'Not Categorized'
+    ->     END AS Class
+    ->   FROM Stud_Marks;
+    ->     END;
+    ->    //
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> call Grade();
+    -> //
+Query OK, 4 rows affected (0.07 sec)
+
+mysql> select*from Result;
+    -> //
++--------+----------------+-----------------+
+| RollNo | Name           | Class           |
++--------+----------------+-----------------+
+|      1 | omkar bhor     | Distinction     |
+|      2 | yash khedkar   | Distinction     |
+|      3 | ritesh jalkote | Distinction     |
+|      4 | pratik datir   | Not Categorized |
++--------+----------------+-----------------+
+4 rows in set (0.00 sec)
+
+mysql>
